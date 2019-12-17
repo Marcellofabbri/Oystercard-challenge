@@ -10,8 +10,8 @@ describe Journey do
   end
 
   it "creates a complete journey" do
-    subject.create_entry(station_1)
-    subject.create_exit(station_2)
+    subject.create_journey(station_1)
+    subject.create_journey(station_2)
     expect(subject.journey).to include(:entry => station_1, :exit => station_2)
   end
 
@@ -28,7 +28,7 @@ describe Journey do
     end
 
     it "after touch in journey is true" do
-      subject.create_entry(station_1)
+      subject.create_journey(station_1)
       expect(subject).to be_in_journey
     end
 
@@ -42,13 +42,13 @@ describe Journey do
 
   describe '#fare' do
     it 'return the minimum fare' do
-      subject.create_entry(station_1)
-      subject.create_exit(station_2)
+      subject.create_journey(station_1)
+      subject.create_journey(station_2)
       expect(subject.fare).to eq Oystercard::MINIMUM_CHARGE
     end
 
     it 'return the penality if entry or exit are not recorded' do
-      subject.create_entry(station_1)
+      subject.create_journey(station_1)
       expect(subject.fare).to eq Journey::PENALITY_FARE
     end
   end

@@ -20,12 +20,12 @@ class Oystercard
 
   def touch_in(station)
     fail "Please top up" if balance < MINIMUM_CHARGE
-    journey.create_entry(station)
+    journey.create_journey(station)
   end
 
   def touch_out(station)
     deduct
-    journey.create_exit(station)
+    journey.create_journey(station)
     journey.add_journey
   end
 

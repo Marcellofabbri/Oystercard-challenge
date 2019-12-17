@@ -9,12 +9,8 @@ class Journey
     @history = []
   end
 
-  def create_entry(station)
-    @journey[:entry] = station
-  end
-
-  def create_exit(station)
-    @journey[:exit] = station
+  def create_journey(station)
+    @journey.empty? ? @journey[:entry] = station : @journey[:exit] = station
   end
 
   def add_journey
