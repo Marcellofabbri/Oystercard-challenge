@@ -42,16 +42,25 @@ describe Oystercard do
 
   describe 'touch_in' do
     it "after touch in journey is true" do
+      subject.top_up(1)
       subject.touch_in
       expect(subject).to be_in_journey
+    end
+    it "raises error when balance is less than minimum charge" do
+      expect{ subject.touch_in }.to raise_error "Please top up"
     end
   end
 
   describe 'touch_out' do
     it "after touch out journey is false" do
+      subject.top_up(1)
       subject.touch_in
       subject.touch_out
       expect(subject).not_to be_in_journey
+    end
+    it "deducts the fare for the journey" do
+      subject.top_up(1)
+      expect { subject.touch_out }.to change{subject.balance}.by(-1)
     end
   end
 end
