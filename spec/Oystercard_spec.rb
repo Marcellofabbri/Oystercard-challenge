@@ -21,8 +21,11 @@ describe Oystercard do
       subject.top_up(cap)
       expect{ subject.top_up 1 }.to raise_error "Cannot exceed 90"
     end
+  end
 
+  describe '#deduct' do
     it "deducts the fare from the balance" do
+      subject.top_up(1)
       expect{ subject.deduct 1 }.to change{ subject.balance }.by -1
     end
 
@@ -31,4 +34,24 @@ describe Oystercard do
     end
   end
 
+  describe 'in_journey?' do
+    it "is false by default" do
+      expect(subject).not_to be_in_journey
+    end
+  end
+
+  describe 'touch_in' do
+    it "after touch in journey is true" do
+      subject.touch_in
+      expect(subject).to be_in_journey
+    end
+  end
+
+  describe 'touch_out' do
+    it "after touch out journey is false" do
+      subject.touch_in
+      subject.touch_out
+      expect(subject).not_to be_in_journey
+    end
+  end
 end
