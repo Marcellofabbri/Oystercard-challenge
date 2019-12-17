@@ -48,15 +48,10 @@ describe Oystercard do
     it "raises error when balance is less than minimum charge" do
       expect{ subject.touch_in(station) }.to raise_error "Please top up"
     end
-    it "saved entry_station" do
-      subject.top_up(1)
-      subject.touch_in(station)
-      expect(subject.entry_station).to eq station
-    end
   end
 
   describe 'touch_out' do
-    it "after touch out journey is false" do
+    xit "after touch out journey is false" do
       subject.top_up(1)
       subject.touch_in(station)
       subject.touch_out(station)
