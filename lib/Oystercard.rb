@@ -1,28 +1,19 @@
 class Oystercard
-  attr_accessor :balance, :limit
+  attr_accessor :balance
 
-#   def balance
-#     @balance
-#   end
-    # def balance=(value)
-    #   @balance = value
-    # end
+  LIMIT = 90
 
-
-  def initialize(balance: 0, limit: 90)
+  def initialize(balance: 0)
     @balance = balance
-    @limit = limit
   end
 
   def top_up(amount)
-    fail "Balance can't be over 90" if balance > 90
-    if @balance + amount > 90
-      return
-    else
-      @balance += amount
-    end
+    fail "Cannot exceed 90" if (amount + balance) > LIMIT
+    @balance += amount
   end
 
-
-
+  def deduct(fare)
+    fail "Insufficient funds" if (balance - fare) < 0
+    @balance -= fare
+  end
 end
