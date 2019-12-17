@@ -1,4 +1,5 @@
 require_relative 'station'
+require_relative 'journey'
 
 class Oystercard
   attr_accessor :balance
@@ -9,8 +10,7 @@ class Oystercard
 
   def initialize(balance: 0)
     @balance = balance
-    @journey = {}
-    @history = []
+    @journey = Journey.new
   end
 
   def top_up(amount)
@@ -18,37 +18,21 @@ class Oystercard
     @balance += amount
   end
 
-  def in_journey?
-    @journey.any?
-  end
-
   def touch_in(station)
     fail "Please top up" if balance < MINIMUM_CHARGE
-    create_entry(station)
+    journey.create_entry(station)
   end
 
   def touch_out(station)
-    deduct(MINIMUM_CHARGE)
-    create_exit(station)
-    add_journey
+    deduct
+    journey.create_exit(station)
+    journey.add_journey
   end
 
   private
 
-  def add_journey
-    history << @journey
-  end
-
-  def create_entry(station)
-    @journey[:entry] = station
-  end
-
-  def create_exit(station)
-    @journey[:exit] = station
-  end
-
-  def deduct(fare)
-    fail "Insufficient funds" if (balance - fare) < 0
-    @balance -= fare
+  def deduct
+    fail "Insufficient funds" if (balance - journey.fare) < 0
+    @balance -= journey.fare
   end
 end
