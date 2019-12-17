@@ -2,6 +2,8 @@ require 'Oystercard'
 
 describe Oystercard do
 
+  let(:station) { double(:station) }
+
   describe '#balance' do
     it "has a default balance of zero" do
       expect(subject.balance).to eq 0
@@ -24,13 +26,9 @@ describe Oystercard do
   end
 
   describe '#deduct' do
-    it "deducts the fare from the balance" do
-      subject.top_up(1)
-      expect{ subject.deduct 1 }.to change{ subject.balance }.by -1
-    end
 
     it "raises an error when trying to deduct more than the balance" do
-      expect{ subject.deduct 1 }.to raise_error "Insufficient funds"
+      expect{ subject.touch_out }.to raise_error "Insufficient funds"
     end
   end
 
@@ -43,20 +41,31 @@ describe Oystercard do
   describe 'touch_in' do
     it "after touch in journey is true" do
       subject.top_up(1)
-      subject.touch_in
+      subject.touch_in(station)
       expect(subject).to be_in_journey
     end
     it "raises error when balance is less than minimum charge" do
-      expect{ subject.touch_in }.to raise_error "Please top up"
+      expect{ subject.touch_in(station) }.to raise_error "Please top up"
+    end
+    it "saved entry_station" do
+      subject.top_up(1)
+      subject.touch_in(station)
+      expect(subject.entry_station).to eq station
     end
   end
 
   describe 'touch_out' do
     it "after touch out journey is false" do
       subject.top_up(1)
-      subject.touch_in
+      subject.touch_in(station)
       subject.touch_out
       expect(subject).not_to be_in_journey
+    end
+    it "forgets entry_station" do
+      subject.top_up(1)
+      subject.touch_in(station)
+      subject.touch_out
+      expect(subject.entry_station).to eq nil
     end
     it "deducts the fare for the journey" do
       subject.top_up(1)
